@@ -1,17 +1,21 @@
 Rails.application.routes.draw do
-    devise_for :users, defaults: { format: :json }, controllers: {
+  get "users/index"
+  # Devise with JSON-only responses and custom controllers
+  devise_for :users,
+    defaults: { format: :json },
+    controllers: {
       sessions: "users/sessions",
-      registrations: "users/registrations"
-    }
+      registrations: "users/registrations",
+      passwords: "users/passwords"  # Optional
+    },
+    path: "auth"  # Avoids route conflicts (e.g., /auth/sign_in)
 
+  # Custom user routes (avoid overlap with Devise)
+  resources :users, only: [ :index, :show ]  # Example: GET /users, GET /users/1
 
-
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # Optional: Root route (e.g., for docs)
+  # root "home#index"
 end
