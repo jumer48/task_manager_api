@@ -47,3 +47,8 @@ group :development, :test do
 end
 
 gem "dotenv-rails"
+
+gem "devise", "~> 4.9"
+
+gem "devise-jwt", "~> 0.12.1"
+gem "activerecord-session_store"
