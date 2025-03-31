@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     path: "auth"  # Avoids route conflicts (e.g., /auth/sign_in)
 
   # Custom user routes (avoid overlap with Devise)
-  resources :users, only: [ :index, :show ]  # Example: GET /users, GET /users/1
+  resources :users, only: [ :index, :show ], path: "auth/users"
 
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
