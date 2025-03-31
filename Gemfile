@@ -52,3 +52,4 @@ gem "devise", "~> 4.9"
 
 gem "devise-jwt", "~> 0.12.1"
 gem "activerecord-session_store"
+gem "bcrypt", "~> 3.1.7"
