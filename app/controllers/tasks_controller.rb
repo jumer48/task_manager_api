@@ -35,13 +35,15 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy
-    head :no_content
+    render json: { message: "Task deleted successfully" }, status: :ok
+  rescue StandardError => e
+    render json: { error: "Failed to delete task: #{e.message}" }, status: :unprocessable_entity
   end
 
   private
 
   def set_task
-    @task = current_user.tasks.find(params[:id])
+    @task = Task.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Task not found" }, status: :not_found
   end
