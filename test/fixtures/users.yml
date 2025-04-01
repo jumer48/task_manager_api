@@ -1,7 +1,7 @@
-valid_user:
-  email: "user@example.com"
-  encrypted_password: <%= Devise::Encryptor.digest(User, 'password1') %>
+# valid_user:
+#   email: "user@example.com"
+#   encrypted_password: <%= Devise::Encryptor.digest(User, 'password1') %>
 
-another_user:
-  email: "user1@example.com"
-  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
+# another_user:
+#   email: "user1@example.com"
+#   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
