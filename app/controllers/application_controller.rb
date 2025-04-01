@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::API
-    respond_to :json
+  include Devise::Controllers::Helpers
+  before_action :authenticate_user!
+  respond_to :json
 
     private
 

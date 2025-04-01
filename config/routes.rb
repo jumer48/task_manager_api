@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     },
     path: "auth"
 
+  resources :tasks, only: [ :create ]
   resources :users, only: [ :index, :show ], path: "auth/users"
   resources :tasks, only: [ :index, :show, :create, :update, :destroy ] do
     collection do
