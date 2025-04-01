@@ -1,21 +1,20 @@
 Rails.application.routes.draw do
   get "users/index"
-  # Devise with JSON-only responses and custom controllers
   devise_for :users,
     defaults: { format: :json },
     controllers: {
       sessions: "users/sessions",
       registrations: "users/registrations",
-      passwords: "users/passwords"  # Optional
+      passwords: "users/passwords"
     },
-    path: "auth"  # Avoids route conflicts (e.g., /auth/sign_in)
+    path: "auth"
 
-  # Custom user routes (avoid overlap with Devise)
   resources :users, only: [ :index, :show ], path: "auth/users"
+  resources :tasks, only: [ :index, :show, :create, :update, :destroy ] do
+    collection do
+      patch :complete
+    end
+  end
 
-  # Health check
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Optional: Root route (e.g., for docs)
-  # root "home#index"
 end
