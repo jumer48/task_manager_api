@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 
   # Custom user routes (avoid overlap with Devise)
   resources :users, only: [ :index, :show ], path: "auth/users"
+  resources :tasks, only: [ :create ]
 
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
