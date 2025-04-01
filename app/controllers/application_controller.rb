@@ -1,13 +1,15 @@
 class ApplicationController < ActionController::API
-    respond_to :json
+  include Devise::Controllers::Helpers
+  before_action :authenticate_user!
+  respond_to :json
 
-    private
+  private
 
-    def respond_with(resource, _opts = {})
-      render json: resource
-    end
+  def respond_with(resource, _opts = {})
+    render json: resource
+  end
 
-    def respond_to_on_destroy
-      head :no_content
-    end
+  def respond_to_on_destroy
+    head :no_content
+  end
 end
