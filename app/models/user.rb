@@ -23,4 +23,11 @@ class User < ApplicationRecord
   def set_jti
     self.jti ||= SecureRandom.uuid
   end
+
+  def revoke_jwt(token)
+    payload = JWT.decode(token, Rails.application.credentials.secret_key_base).first
+    JwtDenylist.revoke_jwt(payload, self)
+  rescue JWT::DecodeError
+    false
+  end
 end
