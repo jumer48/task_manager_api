@@ -280,17 +280,20 @@ Devise.setup do |config|
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
   #
-  config.warden do |manager|
-    config.jwt do |jwt|
-      jwt.secret = ENV["DEVISE_JWT_SECRET_KEY"]
-      jwt.dispatch_requests = [
-        [ "POST", %r{^/auth/sign_in$} ]
-      ]
-      jwt.revocation_requests = [
-        [ "DELETE", %r{^/auth/sign_out$} ]
-      ]
-      jwt.expiration_time = 1.day.to_i
-    end
+# config/initializers/devise.rb
+config.warden do |manager|
+  # Remove the manager.config.jwt block completely
+  # Just keep the direct jwt configuration:
+  config.jwt do |jwt|
+    jwt.secret = ENV["DEVISE_JWT_SECRET_KEY"]
+    jwt.dispatch_requests = [
+      ["POST", %r{^/auth/sign_in$}]
+    ]
+    jwt.revocation_requests = [
+      ["DELETE", %r{^/auth/sign_out$}]
+    ]
+    jwt.expiration_time = 1.day.to_i
+  end
     #   manager.intercept_401 = false
     #   manager.default_strategies(scope: :user).unshift :some_external_strategy
   end
