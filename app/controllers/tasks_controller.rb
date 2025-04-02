@@ -8,7 +8,7 @@ class TasksController < ApplicationController
   end
 
   def show
-    @task = current_user.tasks.find(params[:id]) # Note the @ symbol
+    @task = current_user.tasks.find(params[:id]) 
     render json: @task
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Task not found" }, status: :not_found
@@ -24,15 +24,18 @@ class TasksController < ApplicationController
   end
 
   def update
-    task = current_user.tasks.find(params[:id])
-    
-    if task.update(task_params)
-      render json: task, status: :ok
+    # Ensure that the task belongs to the current user
+    if @task.user != current_user
+      render json: { error: "You are not authorized to update this task" }, status: :forbidden
+      return
+    end
+
+    if @task.update(task_params)
+      render json: @task, status: :ok
     else
-      render json: { errors: task.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
     end
   end
-  
 
   def complete
     # If it's a single task:
@@ -57,6 +60,11 @@ class TasksController < ApplicationController
   end
 
   def destroy
+    if @task.user != current_user
+      render json: { error: "You are not authorized to delete this task" }, status: :forbidden
+      return
+    end
+
     @task.destroy
     render json: { message: "Task deleted successfully" }, status: :ok
   rescue StandardError => e
@@ -83,6 +91,6 @@ class TasksController < ApplicationController
 
 
   def task_params
-    params.require(:task).permit(:title, :description, :due_date)
+    params.require(:task).permit(:title, :description, :due_date, :completed)
   end
 end
