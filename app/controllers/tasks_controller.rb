@@ -8,7 +8,11 @@ class TasksController < ApplicationController
   end
 
   def show
-    render json: @task
+    if @task.user == current_user
+      render json: @task
+    else
+      render json: { error: "Not authorized" }, status: :forbidden
+    end
   end
 
   def create
@@ -43,7 +47,7 @@ class TasksController < ApplicationController
   private
 
   def set_task
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Task not found" }, status: :not_found
   end
