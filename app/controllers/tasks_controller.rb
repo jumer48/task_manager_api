@@ -16,7 +16,7 @@ class TasksController < ApplicationController
     if @task.save
       render json: @task, status: :created
     else
-      render json: { errors: task.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -24,13 +24,30 @@ class TasksController < ApplicationController
     if @task.update(task_params)
       render json: @task
     else
-      render json: { errors: task.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def complete
-    @task.update(completed: true)
-    render json: @task
+    # If it's a single task:
+    if @task
+      if @task.completed
+        render json: { message: "Task is already completed" }, status: :ok
+      else
+        @task.update(completed: true)
+        render json: { message: "Task marked as completed", task: @task }, status: :ok
+      end
+    elsif @tasks.present?  # If it's a list of tasks
+      # Check each task in @tasks and mark them as completed
+      @tasks.each do |task|
+        unless task.completed
+          task.update(completed: true)
+        end
+      end
+      render json: { message: "Tasks marked as completed", tasks: @tasks }, status: :ok
+    else
+      render json: { error: "Tasks not found" }, status: :not_found
+    end
   end
 
   def destroy
@@ -43,10 +60,21 @@ class TasksController < ApplicationController
   private
 
   def set_task
-    @task = Task.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: "Task not found" }, status: :not_found
+    if params[:task_ids].present?
+      # Handle multiple tasks when task_ids are provided
+      @tasks = current_user.tasks.where(id: params[:task_ids])
+      if @tasks.empty?
+        render json: { error: "Tasks not found" }, status: :not_found
+      end
+    else
+      # Handle single task by ID
+      @task = current_user.tasks.find_by(id: params[:id])
+      unless @task
+        render json: { error: "Task not found" }, status: :not_found
+      end
+    end
   end
+
 
   def task_params
     params.require(:task).permit(:title, :description, :due_date, :completed)
