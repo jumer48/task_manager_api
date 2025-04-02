@@ -5,7 +5,7 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(resource, _opts = {})
-    render json: { 
+    render json: {
       message: "Logged in successfully",
       user: resource.as_json(except: :jti)
     }, status: :ok
@@ -13,13 +13,13 @@ class Users::SessionsController < Devise::SessionsController
 
   def respond_to_on_destroy
     if current_user
-      current_user.revoke_jwt(request.headers['Authorization']&.split&.last)
-      render json: { 
-        message: "Logged out successfully. Please login again to continue." 
+      current_user.revoke_jwt(request.headers["Authorization"]&.split&.last)
+      render json: {
+        message: "Logged out successfully. Please login again to continue."
       }, status: :ok
     else
-      render json: { 
-        error: "No active session found" 
+      render json: {
+        error: "No active session found"
       }, status: :unauthorized
     end
   end
