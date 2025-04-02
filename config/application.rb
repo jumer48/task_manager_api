@@ -34,6 +34,6 @@ module TaskManagerApi
     config.middleware.use ActionDispatch::Session::CookieStore
     config.api_only = true
 
-    config.autoload_paths << Rails.root.join('app/lib')
+    config.autoload_paths << Rails.root.join("app/lib")
   end
 end

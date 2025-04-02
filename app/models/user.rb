@@ -1,10 +1,10 @@
 # app/models/user.rb
 class User < ApplicationRecord
   has_many :tasks, dependent: :destroy
-  
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :jwt_authenticatable, 
+         :jwt_authenticatable,
          jwt_revocation_strategy: JwtDenylist # Changed from Null to our new strategy
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
