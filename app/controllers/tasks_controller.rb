@@ -8,7 +8,10 @@ class TasksController < ApplicationController
   end
 
   def show
+    @task = current_user.tasks.find(params[:id]) # Note the @ symbol
     render json: @task
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Task not found" }, status: :not_found
   end
 
   def create
