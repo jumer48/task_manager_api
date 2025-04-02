@@ -24,12 +24,15 @@ class TasksController < ApplicationController
   end
 
   def update
-    if @task.update(task_params)
-      render json: @task
+    task = current_user.tasks.find(params[:id])
+    
+    if task.update(task_params)
+      render json: task, status: :ok
     else
-      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: task.errors.full_messages }, status: :unprocessable_entity
     end
   end
+  
 
   def complete
     # If it's a single task:
@@ -80,6 +83,6 @@ class TasksController < ApplicationController
 
 
   def task_params
-    params.require(:task).permit(:title, :description, :due_date, :completed)
+    params.require(:task).permit(:title, :description, :due_date)
   end
 end
