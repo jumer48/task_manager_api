@@ -14,6 +14,9 @@ Rails.application.routes.draw do
     collection do
       patch :complete
     end
+    member do
+      patch :complete
+    end
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
